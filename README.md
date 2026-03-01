@@ -1,123 +1,186 @@
 # 🏦 AI Claim Analysis & Risk Assessment System (Malaysia)
 
-An end-to-end **Document Intelligence + Predictive Analytics + RAG + Generative AI** prototype for insurance claim processing.  
-This system automatically extracts key fields from claim PDFs (OCR/NLP), predicts claim risk level using ML, retrieves similar historical cases using embeddings (RAG), and generates an executive summary for faster decision-making.
+![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
+![Machine Learning](https://img.shields.io/badge/ML-RandomForest-green)
+![RAG](https://img.shields.io/badge/RAG-Enabled-purple)
+![LLM](https://img.shields.io/badge/LLM-Ollama%20Llama3-orange)
+![OCR](https://img.shields.io/badge/OCR-Tesseract-red)
+![UI](https://img.shields.io/badge/UI-Gradio-blueviolet)
+![Status](https://img.shields.io/badge/Status-Prototype-yellow)
 
-> **Tech Focus:** OCR + NLP extraction • ML Risk Classification • Retrieval-Augmented Generation (RAG) • LLM Summary • Gradio UI MVP
+An end-to-end **Document Intelligence + Predictive Analytics + Retrieval-Augmented Generation (RAG) + Generative AI** prototype for insurance claim processing.
 
----
+This system automatically:
 
-## ✨ Key Features
+* Extracts structured data from claim PDFs (OCR/NLP)
+* Predicts claim risk using Machine Learning
+* Retrieves semantically similar historical cases (RAG)
+* Generates executive-level risk summaries (LLM-ready)
+* Presents results via an interactive Gradio UI
 
-✅ **PDF Text Extraction + OCR Fallback**  
-- Uses `pdfplumber` for selectable text extraction  
-- Falls back to `pytesseract + pdf2image` when PDF is scanned/image-based
-
-✅ **Entity Extraction (NLP Parsing)**  
-Extracts structured fields:
-- Claimant name
-- Claim amount (RM)
-- Incident type
-- Location (State)
-- Policy number
-- Date of incident
-
-✅ **Risk Level Prediction (Machine Learning)**  
-- Trains a `RandomForestClassifier` on Malaysia-calibrated claims dataset  
-- Predicts `risk_level` = `Low / Medium / High`  
-- Pipeline includes `OneHotEncoder` + numeric passthrough with `ColumnTransformer`
-
-✅ **RAG: Similar Historical Case Retrieval**  
-- Uses `sentence-transformers (all-MiniLM-L6-v2)` embeddings  
-- Retrieves top similar cases from `knowledge_base_100_cases.txt`
-
-✅ **Executive Summary Generation (GenAI-ready)**  
-- Attempts LLM generation via **Ollama (llama3)** if available  
-- Auto fallback summary always works (no LLM required)
-
-✅ **Interactive UI (Gradio MVP)**  
-- Upload PDF → Extract entities → Predict risk → Show similar cases → Summary
+> Designed as a hybrid AI decision-support system for insurance analytics.
 
 ---
 
-## 🧩 System Architecture (High-level)
+# 🧩 System Architecture (High-Level)
 
-1. **Input:** Claim PDF  
-2. **Extraction:** pdfplumber → OCR fallback (Tesseract)  
-3. **Entity Parsing:** Regex extraction → structured fields  
-4. **Feature Mapping:** Convert entities → ML model features  
-5. **Prediction:** Risk classification (Low/Medium/High)  
-6. **RAG:** Retrieve similar past cases using embeddings  
-7. **Summary:** LLM (optional) or rules-based fallback  
-8. **Output:** Table + risk label + summary + RAG evidence + raw text preview
+1. **Input:** Claim PDF
+2. **Extraction:** pdfplumber → OCR fallback (Tesseract)
+3. **Entity Parsing:** Regex-based structured extraction
+4. **Feature Mapping:** Convert entities into ML feature schema
+5. **Prediction:** RandomForest risk classification
+6. **RAG:** Vector similarity search on historical cases
+7. **Summary:** LLM (Ollama) or rule-based fallback
+8. **Output:** Structured table + risk label + summary + evidence
 
 ---
 
-## 📂 Project Structure
+# 🏗️ Technical Architecture
+
+```text
+            ┌─────────────────────────┐
+            │     Claim PDF Input     │
+            └────────────┬────────────┘
+                         │
+              ┌──────────▼───────────┐
+              │   PDF Extraction     │
+              │ pdfplumber / OCR     │
+              └──────────┬───────────┘
+                         │
+              ┌──────────▼───────────┐
+              │   Entity Extraction  │
+              │   (Regex / NLP)      │
+              └──────────┬───────────┘
+                         │
+        ┌────────────────▼────────────────┐
+        │ Feature Engineering & Mapping   │
+        └────────────────┬────────────────┘
+                         │
+              ┌──────────▼───────────┐
+              │  ML Risk Classifier  │
+              │  RandomForest        │
+              └──────────┬───────────┘
+                         │
+              ┌──────────▼───────────┐
+              │   RAG Retrieval      │
+              │ SentenceTransformer  │
+              └──────────┬───────────┘
+                         │
+              ┌──────────▼───────────┐
+              │   LLM Summary        │
+              │ (Ollama / Fallback)  │
+              └──────────┬───────────┘
+                         │
+            ┌────────────▼─────────────┐
+            │  Gradio UI Output Layer  │
+            └──────────────────────────┘
+```
+
+---
+
+# ✨ Key Features
+
+### 📄 PDF Text Extraction + OCR Fallback
+
+* `pdfplumber` for selectable text
+* `pytesseract + pdf2image` for scanned PDFs
+
+### 🧠 Entity Extraction
+
+Extracts:
+
+* Claimant name
+* Claim amount (RM)
+* Incident type
+* Location (State)
+* Policy number
+* Date of incident
+
+### 🤖 Risk Level Prediction
+
+* `RandomForestClassifier`
+* OneHotEncoder + ColumnTransformer pipeline
+* Output: Low / Medium / High risk
+
+### 🔎 RAG (Retrieval-Augmented Generation)
+
+* `sentence-transformers (all-MiniLM-L6-v2)`
+* Cosine similarity search
+* Top-k similar historical cases retrieved
+
+### 📝 Executive Summary Generation
+
+* Ollama (llama3) if available
+* Automatic fallback summary if LLM unavailable
+
+### 🎛 Interactive Gradio UI
+
+* Upload PDF
+* View structured extraction
+* View risk classification
+* Inspect similar historical cases
+* Read AI executive summary
+
+---
+
+# Example Output
+
+### 📊 Extracted Structured Data Table
+
+![Data Extracted](https://raw.githubusercontent.com/azlinaaaa/AI-Powered-Risk-Assessment-and-Claims-Analytics-Platform/067e7baca1b08d32a8019f0a70a8f7b7cbf13a1e/Output/Data_Extracted.png)
+
+---
+
+### ✅ AI Executive Summary Output
+
+![AI Summary](https://raw.githubusercontent.com/azlinaaaa/AI-Powered-Risk-Assessment-and-Claims-Analytics-Platform/067e7baca1b08d32a8019f0a70a8f7b7cbf13a1e/Output/AI_Summary.png)
+
+---
+
+# 📂 Project Structure
 
 ```text
 .
-├── app.py                         # Gradio app (main)
-├── train_model.py                 # ML training script (saves risk_model.pkl)
-├── risk_model.pkl                 # Trained model artifact (generated)
-├── claims_dataset_malaysia_calibrated_10000.csv   # Training dataset (optional)
-├── knowledge_base_100_cases.txt   # RAG knowledge base (cases)
-├── pdfs/                          # Sample PDFs (optional)
-├── requirements.txt               # Dependencies
+├── app.py
+├── train_model.py
+├── risk_model.pkl
+├── claims_dataset_malaysia_calibrated_10000.csv
+├── knowledge_base_100_cases.txt
+├── pdfs/
+├── requirements.txt
 └── README.md
-````
+```
 
 ---
 
-## 🛠️ Installation
-
-### 1) Create environment (optional but recommended)
+# 🛠 Installation
 
 ```bash
 python -m venv .venv
-# Windows:
-.venv\Scripts\activate
-# Mac/Linux:
-source .venv/bin/activate
-```
-
-### 2) Install dependencies
-
-```bash
+source .venv/bin/activate   # Mac/Linux
+.venv\Scripts\activate      # Windows
 pip install -r requirements.txt
 ```
 
-### 3) Install OCR dependencies (Tesseract)
+Install Tesseract:
 
-**Windows:** Install Tesseract from official installer and add it to PATH
-**Mac:** `brew install tesseract`
-**Ubuntu/Debian:** `sudo apt-get install tesseract-ocr`
+* Windows → Install & add to PATH
+* Mac → `brew install tesseract`
+* Ubuntu → `sudo apt install tesseract-ocr`
 
 ---
 
-## ▶️ Run the Gradio App
+# ▶️ Run Application
 
 ```bash
 python app.py
 ```
 
-Then open the local URL shown in terminal.
+Open the local URL shown in terminal.
 
 ---
 
-## 📌 Usage
-
-1. Upload a claim PDF in the UI
-2. System extracts entities (name, amount, incident, etc.)
-3. Predicts risk level (`Low/Medium/High`)
-4. Shows top similar historical cases (RAG)
-5. Generates an executive summary (LLM if available, else fallback)
-
----
-
-## 🧠 Model Training
-
-To retrain the model:
+# 🧠 Model Training
 
 ```bash
 python train_model.py
@@ -125,23 +188,77 @@ python train_model.py
 
 Output:
 
-* `risk_model.pkl`
+```
+risk_model.pkl
+```
 
 ---
 
-## 📊 Example Output
+# 📊 Model Explainability
 
-* **Predicted Risk Level:** Low
-* **Extracted Fields:** Claimant, policy no, incident type, location, amount, date
-* **Similar Cases (RAG):** Top 3 matches with similarity scores
-* **Summary:** Risk drivers + recommended next actions
+Risk prediction is influenced by:
+
+* Claim amount
+* Incident type
+* State / region risk score
+* Historical claim frequency
+* Fraud flag
+* Customer tenure
+
+Future upgrades:
+
+* SHAP explainability
+* Confidence scoring
+* Model drift monitoring
 
 ---
 
-## 🧾 Tech Stack
+# 🧠 Design Philosophy
 
-* **Python:** pandas, scikit-learn, joblib
-* **OCR & PDF:** pdfplumber, pytesseract, pdf2image
-* **RAG:** sentence-transformers, cosine similarity
-* **UI:** Gradio
-* **LLM:** Ollama (llama3)
+This system follows a **hybrid AI architecture**:
+
+* Deterministic parsing (regex)
+* Supervised learning (ML classifier)
+* Semantic retrieval (embeddings)
+* Optional generative reasoning (LLM)
+
+This ensures:
+
+* Reliability
+* Reduced hallucination
+* Interpretability
+* Enterprise readiness
+
+---
+
+# 🔐 Enterprise & Production Considerations
+
+* PII encryption required
+* Role-based access control
+* Audit logging
+* Monitoring for model drift
+* Secure cloud deployment
+
+---
+
+# 🚀 Future Enhancements
+
+* Replace regex with LayoutLM / Document AI
+* Add SHAP feature importance
+* Convert to FastAPI backend + React frontend
+* Deploy via Docker
+* Add fraud anomaly detection model
+* Database-backed case management
+* Cloud-native monitoring pipeline
+
+---
+
+# 🧾 Tech Stack
+
+* Python (pandas, scikit-learn, joblib)
+* OCR: pdfplumber, pytesseract
+* RAG: sentence-transformers
+* UI: Gradio
+* LLM: Ollama (llama3)
+
+---
