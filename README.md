@@ -1,1 +1,1 @@
-# ai-risk-intelligence-assistant
+# AI-Powered Risk Assessment & Claims Analytics Platform
